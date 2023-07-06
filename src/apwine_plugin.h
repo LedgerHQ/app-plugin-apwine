@@ -7,8 +7,6 @@
 #define PARAMETER_LENGTH 32
 #define SELECTOR_SIZE    4
 
-#define RUN_APPLICATION 1
-
 #define NUM_APWINE_SELECTORS 11
 #define SELECTOR_SIZE        4
 
