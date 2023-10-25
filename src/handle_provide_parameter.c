@@ -231,8 +231,7 @@ static void handle_increase_unlock_time(ethPluginProvideParameter_t *msg,
     }
 }
 
-void handle_provide_parameter(void *parameters) {
-    ethPluginProvideParameter_t *msg = (ethPluginProvideParameter_t *) parameters;
+void handle_provide_parameter(ethPluginProvideParameter_t *msg) {
     apwine_parameters_t *context = (apwine_parameters_t *) msg->pluginContext;
     printf_hex_array("apwine plugin provide parameter: ", PARAMETER_LENGTH, msg->parameter);
 

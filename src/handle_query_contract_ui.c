@@ -1,3 +1,4 @@
+#include <stdbool.h>
 #include "apwine_plugin.h"
 
 // Set UI for retrieving the ticker.
@@ -5,7 +6,7 @@
 // The pair 0 == (PT,Underlying) and 1 == (PT, FYT)
 // If the token path is 0, the ticker is the PT ticker, and if the token path is 1,
 // the ticker is the Underlying or FYT ticker.
-static void set_send_ticker_ui(ethQueryContractUI_t *msg, apwine_parameters_t *context) {
+static bool set_send_ticker_ui(ethQueryContractUI_t *msg, apwine_parameters_t *context) {
     switch (context->selectorIndex) {
         case SWAP_EXACT_AMOUNT_IN:
         case SWAP_EXACT_AMOUNT_OUT:
@@ -13,8 +14,7 @@ static void set_send_ticker_ui(ethQueryContractUI_t *msg, apwine_parameters_t *c
             break;
         default:
             PRINTF("Unhandled selector Index: %d\n", context->selectorIndex);
-            msg->result = ETH_PLUGIN_RESULT_ERROR;
-            return;
+            return false;
     }
 
     // set to a default value like “???” so that is displayed something is wrong to the user.
@@ -75,6 +75,7 @@ static void set_send_ticker_ui(ethQueryContractUI_t *msg, apwine_parameters_t *c
             }
         }
     }
+    return true;
 }
 
 // Set UI for retrieving the ticker.
@@ -85,7 +86,7 @@ static void set_send_ticker_ui(ethQueryContractUI_t *msg, apwine_parameters_t *c
 // Otherwise, we will use the first pair_path.
 // If the token path is 0, the ticker is the PT ticker, and if the token path is 1,
 // the ticker is the Underlying or FYT ticker.
-static void set_receive_ticker_ui(ethQueryContractUI_t *msg, apwine_parameters_t *context) {
+static bool set_receive_ticker_ui(ethQueryContractUI_t *msg, apwine_parameters_t *context) {
     switch (context->selectorIndex) {
         case SWAP_EXACT_AMOUNT_IN:
         case SWAP_EXACT_AMOUNT_OUT:
@@ -93,8 +94,7 @@ static void set_receive_ticker_ui(ethQueryContractUI_t *msg, apwine_parameters_t
             break;
         default:
             PRINTF("Unhandled selector Index: %d\n", &context->selectorIndex);
-            msg->result = ETH_PLUGIN_RESULT_ERROR;
-            return;
+            return false;
     }
 
     // set to a default value like “???” so that is displayed something is wrong to the user.
@@ -203,18 +203,18 @@ static void set_receive_ticker_ui(ethQueryContractUI_t *msg, apwine_parameters_t
             }
         }
     }
+    return true;
 }
 
 // Set UI for retrieving the underlying ticker.
-static void set_send_underlying_ui(ethQueryContractUI_t *msg, apwine_parameters_t *context) {
+static bool set_send_underlying_ui(ethQueryContractUI_t *msg, apwine_parameters_t *context) {
     switch (context->selectorIndex) {
         case ZAPINTOPT:
             strlcpy(msg->title, "Token Send", msg->titleLength);
             break;
         default:
             PRINTF("Unhandled selector Index: %d\n", context->selectorIndex);
-            msg->result = ETH_PLUGIN_RESULT_ERROR;
-            return;
+            return false;
     }
 
     // set to a default value like “???” so that is displayed something is wrong to the user.
@@ -239,18 +239,18 @@ static void set_send_underlying_ui(ethQueryContractUI_t *msg, apwine_parameters_
             strlcpy(msg->msg, currentToken->ticker_underlying, msg->msgLength);
         }
     }
+    return true;
 }
 
 // Set UI for retrieving the PT ticker.
-static void set_receive_pt_ui(ethQueryContractUI_t *msg, apwine_parameters_t *context) {
+static bool set_receive_pt_ui(ethQueryContractUI_t *msg, apwine_parameters_t *context) {
     switch (context->selectorIndex) {
         case ZAPINTOPT:
             strlcpy(msg->title, "Token Receive", msg->titleLength);
             break;
         default:
             PRINTF("Unhandled selector Index: %d\n", &context->selectorIndex);
-            msg->result = ETH_PLUGIN_RESULT_ERROR;
-            return;
+            return false;
     }
 
     // set to a default value like “???” so that is displayed something is wrong to the user.
@@ -275,10 +275,11 @@ static void set_receive_pt_ui(ethQueryContractUI_t *msg, apwine_parameters_t *co
             strlcpy(msg->msg, currentToken->ticker_pt, msg->msgLength);
         }
     }
+    return true;
 }
 
 // Set UI for retrieving the ticker used in deposit function.
-static void set_future_vault_token_deposit_ui(ethQueryContractUI_t *msg,
+static bool set_future_vault_token_deposit_ui(ethQueryContractUI_t *msg,
                                               apwine_parameters_t *context) {
     switch (context->selectorIndex) {
         case DEPOSIT:
@@ -286,8 +287,7 @@ static void set_future_vault_token_deposit_ui(ethQueryContractUI_t *msg,
             break;
         default:
             PRINTF("Unhandled selector Index: %d\n", context->selectorIndex);
-            msg->result = ETH_PLUGIN_RESULT_ERROR;
-            return;
+            return false;
     }
 
     // set to a default value like “???” so that is displayed something is wrong to the user.
@@ -308,10 +308,11 @@ static void set_future_vault_token_deposit_ui(ethQueryContractUI_t *msg,
             }
         }
     }
+    return true;
 }
 
 // Set UI for retrieving the ticker used in withdraw function.
-static void set_future_vault_token_withdraw_ui(ethQueryContractUI_t *msg,
+static bool set_future_vault_token_withdraw_ui(ethQueryContractUI_t *msg,
                                                apwine_parameters_t *context) {
     switch (context->selectorIndex) {
         case WITHDRAW:
@@ -320,7 +321,7 @@ static void set_future_vault_token_withdraw_ui(ethQueryContractUI_t *msg,
         default:
             PRINTF("Unhandled selector Index: %d\n", context->selectorIndex);
             msg->result = ETH_PLUGIN_RESULT_ERROR;
-            return;
+            return false;
     }
 
     // set to a default value like “???” so that is displayed something is wrong to the user.
@@ -341,10 +342,11 @@ static void set_future_vault_token_withdraw_ui(ethQueryContractUI_t *msg,
             }
         }
     }
+    return true;
 }
 
 // Set UI for "Send" screen.
-static void set_send_amount_ui(ethQueryContractUI_t *msg, apwine_parameters_t *context) {
+static bool set_send_amount_ui(ethQueryContractUI_t *msg, apwine_parameters_t *context) {
     switch (context->selectorIndex) {
         case SWAP_EXACT_AMOUNT_IN:
         case SWAP_EXACT_AMOUNT_OUT:
@@ -370,33 +372,32 @@ static void set_send_amount_ui(ethQueryContractUI_t *msg, apwine_parameters_t *c
             break;
         default:
             PRINTF("Unhandled selector Index: %d\n", context->selectorIndex);
-            msg->result = ETH_PLUGIN_RESULT_ERROR;
-            return;
+            return false;
     }
 
     // Convert to string.
-    amountToString(context->amount_sent,
-                   INT256_LENGTH,
-                   context->decimals_sent,
-                   "",
-                   msg->msg,
-                   msg->msgLength);
+    return amountToString(context->amount_sent,
+                          INT256_LENGTH,
+                          context->decimals_sent,
+                          "",
+                          msg->msg,
+                          msg->msgLength);
 }
 
 // Set UI for "Send" screen.
-static void set_amount_ui(ethQueryContractUI_t *msg, apwine_parameters_t *context) {
+static bool set_amount_ui(ethQueryContractUI_t *msg, apwine_parameters_t *context) {
     strlcpy(msg->title, "Amount", msg->titleLength);
     // Convert to string.
-    amountToString(msg->pluginSharedRO->txContent->value.value,
-                   msg->pluginSharedRO->txContent->value.length,
-                   WEI_TO_ETHER,
-                   context->ticker_sent,
-                   msg->msg,
-                   msg->msgLength);
+    return amountToString(msg->pluginSharedRO->txContent->value.value,
+                          msg->pluginSharedRO->txContent->value.length,
+                          WEI_TO_ETHER,
+                          context->ticker_sent,
+                          msg->msg,
+                          msg->msgLength);
 }
 
 // Set UI for "Receive" screen.
-static void set_receive_amount_ui(ethQueryContractUI_t *msg, apwine_parameters_t *context) {
+static bool set_receive_amount_ui(ethQueryContractUI_t *msg, apwine_parameters_t *context) {
     switch (context->selectorIndex) {
         case SWAP_EXACT_AMOUNT_IN:
         case SWAP_EXACT_AMOUNT_OUT:
@@ -416,24 +417,24 @@ static void set_receive_amount_ui(ethQueryContractUI_t *msg, apwine_parameters_t
             break;
         default:
             PRINTF("Unhandled selector Index: %d\n", context->selectorIndex);
-            msg->result = ETH_PLUGIN_RESULT_ERROR;
-            return;
+            return false;
     }
 
     // Convert to string.
-    amountToString(context->amount_received,
-                   INT256_LENGTH,
-                   context->decimals_received,
-                   "",
-                   msg->msg,
-                   msg->msgLength);
+    return amountToString(context->amount_received,
+                          INT256_LENGTH,
+                          context->decimals_received,
+                          "",
+                          msg->msg,
+                          msg->msgLength);
 }
 
 // Set UI for "Warning" screen.
-static void set_warning_ui(ethQueryContractUI_t *msg,
+static bool set_warning_ui(ethQueryContractUI_t *msg,
                            const apwine_parameters_t *context __attribute__((unused))) {
     strlcpy(msg->title, "WARNING", msg->titleLength);
     strlcpy(msg->msg, "Unknown token", msg->msgLength);
+    return true;
 }
 
 uint8_t swap_exact_amount_screen(uint8_t index) {
@@ -562,49 +563,47 @@ static screens_t get_screen(ethQueryContractUI_t *msg, apwine_parameters_t *cont
     return ERROR;
 }
 
-void handle_query_contract_ui(void *parameters) {
-    ethQueryContractUI_t *msg = (ethQueryContractUI_t *) parameters;
+void handle_query_contract_ui(ethQueryContractUI_t *msg) {
     apwine_parameters_t *context = (apwine_parameters_t *) msg->pluginContext;
+    bool ret = false;
 
     memset(msg->title, 0, msg->titleLength);
     memset(msg->msg, 0, msg->msgLength);
-    msg->result = ETH_PLUGIN_RESULT_OK;
 
     screens_t screen = get_screen(msg, context);
     switch (screen) {
         case SEND_TICKER_SCREEN:
-            set_send_ticker_ui(msg, context);
+            ret = set_send_ticker_ui(msg, context);
             break;
         case SEND_UNDERLYING_SCREEN:
-            set_send_underlying_ui(msg, context);
+            ret = set_send_underlying_ui(msg, context);
             break;
         case TOKEN_FUTURE_VAULT_SCREEN:
-            set_future_vault_token_deposit_ui(msg, context);
+            ret = set_future_vault_token_deposit_ui(msg, context);
             break;
         case WITHDRAW_FUTURE_VAULT_SCREEN:
-            set_future_vault_token_withdraw_ui(msg, context);
+            ret = set_future_vault_token_withdraw_ui(msg, context);
             break;
         case SEND_SCREEN:
-            set_send_amount_ui(msg, context);
+            ret = set_send_amount_ui(msg, context);
             break;
         case AMOUNT_SCREEN:
-            set_amount_ui(msg, context);
+            ret = set_amount_ui(msg, context);
             break;
         case RECEIVE_TICKER_SCREEN:
-            set_receive_ticker_ui(msg, context);
+            ret = set_receive_ticker_ui(msg, context);
             break;
         case RECEIVE_PT_SCREEN:
-            set_receive_pt_ui(msg, context);
+            ret = set_receive_pt_ui(msg, context);
             break;
         case RECEIVE_SCREEN:
-            set_receive_amount_ui(msg, context);
+            ret = set_receive_amount_ui(msg, context);
             break;
         case WARN_SCREEN:
-            set_warning_ui(msg, context);
+            ret = set_warning_ui(msg, context);
             break;
         default:
             PRINTF("Received an invalid screenIndex\n");
-            msg->result = ETH_PLUGIN_RESULT_ERROR;
-            return;
     }
+    msg->result = ret ? ETH_PLUGIN_RESULT_OK : ETH_PLUGIN_RESULT_ERROR;
 }
