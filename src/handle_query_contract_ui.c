@@ -23,9 +23,7 @@ static bool set_send_ticker_ui(ethQueryContractUI_t *msg, apwine_parameters_t *c
     contract_address_ticker_polygon_eth_t *currentToken2 =
         (contract_address_ticker_polygon_eth_t *) PIC(&CONTRACT_ADDRESS_COLLECTION_2[0]);
     if (memcmp(currentToken2->_amm, context->contract_address_sent, ADDRESS_LENGTH) == 0) {
-        if (memcmp(msg->pluginSharedRO->txContent->chainID.value,
-                   ETH_CHAIN_ID,
-                   ETH_CHAIN_ID_LENGTH) == 0) {
+        if (memcmp(msg->txContent->chainID.value, ETH_CHAIN_ID, ETH_CHAIN_ID_LENGTH) == 0) {
             if (context->pair_path_first == 0) {
                 if (context->token_path_sent == 0) {
                     strlcpy(msg->msg, currentToken2->ticker_eth_pt, msg->msgLength);
@@ -103,9 +101,7 @@ static bool set_receive_ticker_ui(ethQueryContractUI_t *msg, apwine_parameters_t
     contract_address_ticker_polygon_eth_t *currentToken2 =
         (contract_address_ticker_polygon_eth_t *) PIC(&CONTRACT_ADDRESS_COLLECTION_2[0]);
     if (memcmp(currentToken2->_amm, context->contract_address_sent, ADDRESS_LENGTH) == 0) {
-        if (memcmp(msg->pluginSharedRO->txContent->chainID.value,
-                   ETH_CHAIN_ID,
-                   ETH_CHAIN_ID_LENGTH) == 0) {
+        if (memcmp(msg->txContent->chainID.value, ETH_CHAIN_ID, ETH_CHAIN_ID_LENGTH) == 0) {
             if (context->array_len <= 1) {
                 if (context->pair_path_first == 0) {
                     if (context->token_path_received == 0) {
@@ -223,9 +219,7 @@ static bool set_send_underlying_ui(ethQueryContractUI_t *msg, apwine_parameters_
     contract_address_ticker_polygon_eth_t *currentToken2 =
         (contract_address_ticker_polygon_eth_t *) PIC(&CONTRACT_ADDRESS_COLLECTION_2[0]);
     if (memcmp(currentToken2->_amm, context->contract_address_sent, ADDRESS_LENGTH) == 0) {
-        if (memcmp(msg->pluginSharedRO->txContent->chainID.value,
-                   ETH_CHAIN_ID,
-                   ETH_CHAIN_ID_LENGTH) == 0) {
+        if (memcmp(msg->txContent->chainID.value, ETH_CHAIN_ID, ETH_CHAIN_ID_LENGTH) == 0) {
             strlcpy(msg->msg, currentToken2->ticker_eth_underlying, msg->msgLength);
         } else {
             strlcpy(msg->msg, currentToken2->ticker_polygon_underlying, msg->msgLength);
@@ -259,9 +253,7 @@ static bool set_receive_pt_ui(ethQueryContractUI_t *msg, apwine_parameters_t *co
     contract_address_ticker_polygon_eth_t *currentToken2 =
         (contract_address_ticker_polygon_eth_t *) PIC(&CONTRACT_ADDRESS_COLLECTION_2[0]);
     if (memcmp(currentToken2->_amm, context->contract_address_sent, ADDRESS_LENGTH) == 0) {
-        if (memcmp(msg->pluginSharedRO->txContent->chainID.value,
-                   ETH_CHAIN_ID,
-                   ETH_CHAIN_ID_LENGTH) == 0) {
+        if (memcmp(msg->txContent->chainID.value, ETH_CHAIN_ID, ETH_CHAIN_ID_LENGTH) == 0) {
             strlcpy(msg->msg, currentToken2->ticker_eth_pt, msg->msgLength);
         } else {
             strlcpy(msg->msg, currentToken2->ticker_polygon_pt, msg->msgLength);
@@ -296,9 +288,7 @@ static bool set_future_vault_token_deposit_ui(ethQueryContractUI_t *msg,
     contract_address_future_vault_t *currentToken = NULL;
     for (uint8_t i = 0; i < NUM_CONTRACT_ADDRESS_FUTURE_VAULT; i++) {
         currentToken = (contract_address_future_vault_t *) PIC(&CONTRACT_ADDRESS_FUTURE_VAULT[i]);
-        if (memcmp(msg->pluginSharedRO->txContent->chainID.value,
-                   ETH_CHAIN_ID,
-                   ETH_CHAIN_ID_LENGTH) == 0) {
+        if (memcmp(msg->txContent->chainID.value, ETH_CHAIN_ID, ETH_CHAIN_ID_LENGTH) == 0) {
             if (memcmp(currentToken->_amm, context->contract_address_sent, ADDRESS_LENGTH) == 0) {
                 strlcpy(msg->msg, currentToken->deposit_ticker_eth, msg->msgLength);
             }
@@ -330,9 +320,7 @@ static bool set_future_vault_token_withdraw_ui(ethQueryContractUI_t *msg,
     contract_address_future_vault_t *currentToken = NULL;
     for (uint8_t i = 0; i < NUM_CONTRACT_ADDRESS_FUTURE_VAULT; i++) {
         currentToken = (contract_address_future_vault_t *) PIC(&CONTRACT_ADDRESS_FUTURE_VAULT[i]);
-        if (memcmp(msg->pluginSharedRO->txContent->chainID.value,
-                   ETH_CHAIN_ID,
-                   ETH_CHAIN_ID_LENGTH) == 0) {
+        if (memcmp(msg->txContent->chainID.value, ETH_CHAIN_ID, ETH_CHAIN_ID_LENGTH) == 0) {
             if (memcmp(currentToken->_amm, context->contract_address_sent, ADDRESS_LENGTH) == 0) {
                 strlcpy(msg->msg, currentToken->withdraw_ticker_eth, msg->msgLength);
             }
@@ -388,8 +376,8 @@ static bool set_send_amount_ui(ethQueryContractUI_t *msg, apwine_parameters_t *c
 static bool set_amount_ui(ethQueryContractUI_t *msg, apwine_parameters_t *context) {
     strlcpy(msg->title, "Amount", msg->titleLength);
     // Convert to string.
-    return amountToString(msg->pluginSharedRO->txContent->value.value,
-                          msg->pluginSharedRO->txContent->value.length,
+    return amountToString(msg->txContent->value.value,
+                          msg->txContent->value.length,
                           WEI_TO_ETHER,
                           context->ticker_sent,
                           msg->msg,
