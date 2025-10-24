@@ -63,8 +63,7 @@ void handle_token(ethPluginProvideInfo_t *msg, apwine_parameters_t *context) {
     }
 }
 
-void handle_provide_token(void *parameters) {
-    ethPluginProvideInfo_t *msg = (ethPluginProvideInfo_t *) parameters;
+void handle_provide_token(ethPluginProvideInfo_t *msg) {
     apwine_parameters_t *context = (apwine_parameters_t *) msg->pluginContext;
 
     switch (context->selectorIndex) {
